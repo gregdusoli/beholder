@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard/Dashboard.tsx'
-import Login from './pages/Login.tsx'
+import Login from './pages/Login/Login.tsx'
 
 function Router() {
 
