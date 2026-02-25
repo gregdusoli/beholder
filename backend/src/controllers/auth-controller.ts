@@ -1,23 +1,31 @@
+import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import usersRepository from "../repositories/users-repository.ts";
 
 const blacklist = {} as any;
 
 async function doLogin(req: Request, res: Response) {
 	const { email, password } = req.body;
 
-	if (email === "gui.vabi@gmail.com" && password === "123456") {
-		const token = jwt.sign({ id: 1 }, process.env.JWT_SECRET!, {
-			expiresIn: Number(process.env.JWT_EXPIRES) || 3600,
-		});
-
-		return res.json({
-			id: 1,
-			token,
-		});
+	const user: any = await usersRepository.getUserByEmail(email);
+	if (!user || !user.isActive) {
+		return res.status(401).send("Unauthorized");
 	}
 
-	res.status(401).send("Unauthorized");
+	const isValid = bcrypt.compareSync(password, user.password);
+	if (!isValid) {
+		return res.status(401).send("Unauthorized");
+	}
+
+	const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+		expiresIn: Number(process.env.JWT_EXPIRES) || 3600,
+	});
+
+	return res.json({
+		id: user.id,
+		token,
+	});
 }
 
 async function doLogout(req: Request, res: Response) {
