@@ -1,28 +1,32 @@
 import cors from "cors";
 import * as dotenv from "dotenv";
-import type { Request, Response } from "express";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import errorMiddleware from "./middlewares/error-middleware.ts";
+import router from "./router.ts";
 
 dotenv.config();
 const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use(morgan("dev"));
 app.use(
 	cors({
 		origin: process.env.CORS_ORIGIN,
 	})
 );
-
-app.use("/health", (req: Request, res: Response) => {
-	res.status(200).send("Service is healthy");
-});
-
-app.use("/login", (req: Request, res: Response) => {
-	res.send("Login");
-});
+app.use(
+	morgan("dev", {
+		immediate: false,
+		stream: {
+			write: (message) => {
+				console.log(`\n${message.trim()}`);
+			},
+		},
+	})
+);
+app.use(router);
+app.use(errorMiddleware);
 
 export default app;
