@@ -19,7 +19,10 @@ axios.interceptors.response.use(
 		if (error.response?.status === 401) {
 			localStorage.removeItem("token");
 			console.warn("Unauthorized, redirected to login page");
-			window.location.href = "/";
+
+			if (window.location.pathname !== "/") {
+				window.location.href = "/";
+			}
 		}
 
 		return Promise.reject(error.response ? error.response.data : error);

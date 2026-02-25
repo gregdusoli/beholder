@@ -1,14 +1,18 @@
+import { restClient } from "./BaseService";
+
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function doLogin(email: string, password: string) {
-	if (email === "gui.vabi@gmail.com" && password === "123456") {
-		return {
-			id: 1,
-			token: "fake-jwt-token",
-		};
-	} else {
-		throw new Error("Email or password is incorrect");
-	}
+	const response = await restClient.post(`${API_URL}/login`, {
+		email,
+		password,
+	});
+
+	return response.data;
 }
 
 export async function doLogout() {
-	return true;
+	const response = await restClient.post(`${API_URL}/logout`, {});
+
+	return response.data;
 }
