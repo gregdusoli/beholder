@@ -1,5 +1,6 @@
 import authController from "@controllers/auth-controller.ts";
 import authMiddleware from "@middlewares/auth-middleware.ts";
+import exchangeController from "@controllers/exchange-controller.ts";
 import { Router } from "express";
 
 const router = Router();
@@ -12,9 +13,7 @@ router.post("/login", authController.doLogin);
 
 router.post("/logout", authController.doLogout);
 
-router.get("/protected", authMiddleware, (_, res) => {
-	res.status(200).send("Protected route");
-});
+router.get("/exchange/balance", authMiddleware, exchangeController.getBalance);
 
 router.use("/", (_, res) => {
 	res.status(400).send("Bad Request");
