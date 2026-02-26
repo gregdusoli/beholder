@@ -1,33 +1,43 @@
+import { useState } from "react";
 import useWebSocket from "react-use-websocket";
+import TickerRow from "./TickerRow/TickerRow";
 
 const exchangeWebsocketUrl = import.meta.env.VITE_EXCHANGE_WEBSOCKET_URL;
+const TOP_COINS = [
+	"BTCUSDT",
+	"ETHUSDT",
+	"SOLUSDT",
+	"XRPUSDT",
+	"XLMUSDT",
+	"LINKUSDT",
+	"OMUSDT",
+	"DOGEUSDT",
+];
 
-interface TickerProps {}
-
-function Ticker(props: TickerProps) {
-	const TOP_COINS = [
-		"BTCUSDT",
-		"ETHUSDT",
-		"SOLUSDT",
-		"XRPUSDT",
-		"XLMUSDT",
-		"LINKUSDT",
-		"OMUSDT",
-		"DOGEUSDT",
-	];
+function Ticker() {
+	const [ticker, setTicker] = useState({});
 
 	const streams = TOP_COINS.map((coin) => `${coin.toLowerCase()}@ticker`).join(
 		"/"
 	);
 
-	const { lastJsonMessage } = useWebSocket(`${exchangeWebsocketUrl}/stream`, {
-		queryParams: { streams },
-		onOpen: () => console.log("Connected to Exchange WebSocket stream"),
-		onMessage: () => console.log(lastJsonMessage),
-		onError: (error) => console.error(`WebSocket error: ${error}`),
-		shouldReconnect: () => true,
-		reconnectInterval: 60000,
-	});
+	const { lastJsonMessage }: any = useWebSocket(
+		`${exchangeWebsocketUrl}/stream`,
+		{
+			queryParams: { streams },
+			reconnectInterval: 60000,
+			shouldReconnect: () => true,
+			onOpen: () => console.log("Connected to Exchange WebSocket stream"),
+			onError: (error) => console.error(`WebSocket error: ${error}`),
+			onMessage: () => {
+				if (!lastJsonMessage) return;
+				setTicker((prevState) => ({
+					...prevState,
+					[lastJsonMessage.data.s]: lastJsonMessage.data,
+				}));
+			},
+		}
+	);
 
 	return (
 		<div className="col-12">
@@ -61,10 +71,12 @@ function Ticker(props: TickerProps) {
 							</tr>
 						</thead>
 						<tbody>
-							{TOP_COINS.map((coin) => (
-								<tr key={coin}>
-									<td className="border-bottom">{coin}</td>
-								</tr>
+							{TOP_COINS.map((item) => (
+								<TickerRow
+									key={item}
+									symbol={item}
+									data={(ticker as any)[item]}
+								/>
 							))}
 						</tbody>
 					</table>
