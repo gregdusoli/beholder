@@ -2,6 +2,7 @@ interface SidebarItemProps {
 	link: string;
 	name: string;
 	children: React.ReactNode;
+	onClick?: () => void;
 }
 
 function SidebarItem(props: SidebarItemProps) {
@@ -11,7 +12,7 @@ function SidebarItem(props: SidebarItemProps) {
 
 	return (
 		<li className={getClassName(props.link)}>
-			<a href={props.link} className="nav-link">
+			<a href={props.link} className="nav-link" onClick={props.onClick}>
 				<span className="sidebar-icon">{props.children}</span>
 				<span className="sidebar-text">{props.name}</span>
 			</a>
