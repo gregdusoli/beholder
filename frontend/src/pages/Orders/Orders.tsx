@@ -1,11 +1,11 @@
 import TemplatePage from "../TemplatePage";
 
-function Dashboard() {
+function Orders() {
 	return (
 		<TemplatePage>
-			<div>Dashboard</div>
+			<div>Orders</div>
 		</TemplatePage>
 	);
 }
 
-export default Dashboard;
+export default Orders;
