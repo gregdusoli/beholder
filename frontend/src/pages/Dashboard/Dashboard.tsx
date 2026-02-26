@@ -1,6 +1,7 @@
 import TemplatePage from "../TemplatePage";
 import CandleChart from "../../components/CandleChart/CandleChart";
 import NewOrderButton from "../../components/Order/NewOrderButton/NewOrderButton";
+import Ticker from "../../components/Ticker/Ticker";
 
 function Dashboard() {
 	return (
@@ -15,7 +16,9 @@ function Dashboard() {
 			</div>
 			<CandleChart />
 			<div className="row">
-				<div className="col-6"></div>
+				<div className="col-6">
+					<Ticker />
+				</div>
 				<div className="col-6"></div>
 			</div>
 		</TemplatePage>
