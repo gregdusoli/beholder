@@ -44,6 +44,14 @@
 		"moduleResolution": "nodenext",
     "moduleDetection": "force",
     "skipLibCheck": true,
+		"paths": {
+      "@utils/*": ["./src/utils/*"],
+      "@services/*": ["./src/services/*"],
+      "@controllers/*": ["./src/controllers/*"],
+      "@middlewares/*": ["./src/middlewares/*"],
+      "@models/*": ["./src/models/*"],
+			"@repositories/*": ["./src/repositories/*"]
+    }
   },
 	"include": ["src/**/*"]
 }

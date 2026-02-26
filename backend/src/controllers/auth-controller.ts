@@ -1,7 +1,7 @@
+import usersRepository from "@repositories/users-repository.ts";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import usersRepository from "../repositories/users-repository.ts";
 
 const blacklist = {} as any;
 

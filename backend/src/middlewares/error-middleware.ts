@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import logger from "../utils/logger.ts";
+import logger from "@utils/logger.ts";
 
 const errorMiddleware: ErrorRequestHandler = (error, _, res) => {
 	const message = error.response ? error.response?.data : error.message;

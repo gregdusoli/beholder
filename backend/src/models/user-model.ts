@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import database from "../db.ts";
 
-const userModel = database.define("User", {
+const userModel = database.define("user", {
 	id: {
 		type: DataTypes.UUID,
 		allowNull: false,

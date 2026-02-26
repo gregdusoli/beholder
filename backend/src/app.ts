@@ -1,9 +1,9 @@
+import errorMiddleware from "@middlewares/error-middleware.ts";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
-import errorMiddleware from "./middlewares/error-middleware.ts";
 import router from "./router.ts";
 
 dotenv.config();
