@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useWebSocket from "react-use-websocket";
-import TickerRow from "./TickerRow/TickerRow";
+import TickerRow from "./TickerRow";
 
 const exchangeWebsocketUrl = import.meta.env.VITE_EXCHANGE_WEBSOCKET_URL;
 const TOP_COINS = [

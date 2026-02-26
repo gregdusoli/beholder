@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 axios.interceptors.request.use(
 	(config) => {
 		const token = localStorage.getItem("token");
@@ -29,4 +31,7 @@ axios.interceptors.response.use(
 	}
 );
 
-export const restClient = axios;
+export const restClient = {
+	send: axios,
+	baseUrl: API_URL,
+};
