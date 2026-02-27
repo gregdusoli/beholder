@@ -12,6 +12,8 @@ const TOP_COINS = [
 	"LINKUSDT",
 	"OMUSDT",
 	"DOGEUSDT",
+	"POLUSDT",
+	"ONDOUSDT",
 ];
 
 function Ticker() {

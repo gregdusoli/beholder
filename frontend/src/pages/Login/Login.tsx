@@ -17,7 +17,9 @@ function Login() {
 		setPassword(e.target.value);
 	}
 
-	function handleSubmit() {
+	function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+		e.preventDefault();
+
 		doLogin(email, password)
 			.then((response) => {
 				setError("");
@@ -46,7 +48,7 @@ function Login() {
 									width="64"
 								/>
 							</div>
-							<form action="#" className="mt-4">
+							<form onSubmit={handleSubmit} className="mt-4">
 								<div className="form-group mb-4">
 									<label htmlFor="email">Email</label>
 									<div className="input-group">
@@ -104,11 +106,7 @@ function Login() {
 									</div>
 								</div>
 								<div className="d-grid">
-									<button
-										type="button"
-										onClick={handleSubmit}
-										className="btn btn-gray-800"
-									>
+									<button type="submit" className="btn btn-gray-800">
 										Sign in
 									</button>
 								</div>

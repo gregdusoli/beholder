@@ -22,7 +22,18 @@ function TickerRow(props: TickerRowProps) {
 	return useMemo(
 		() => (
 			<tr>
-				<td className="text-gray-900 fw-bold">{props.symbol}</td>
+				<td className="text-gray-900 fw-bold">
+					<img
+						className="me-2"
+						width={16}
+						src={`/img/icons/${props.symbol.slice(0, -4).toLowerCase()}.svg`}
+						onError={(e) => {
+							e.currentTarget.onerror = null;
+							e.currentTarget.src = `/img/icons/unknown.svg`;
+						}}
+					/>
+					{props.symbol}
+				</td>
 				<td className={getClass()}>{props.data.c.substring(0, 8)}</td>
 				<td className="text-gray-900">{props.data.o.substring(0, 8)}</td>
 				<td className="text-gray-900">{props.data.h.substring(0, 8)}</td>

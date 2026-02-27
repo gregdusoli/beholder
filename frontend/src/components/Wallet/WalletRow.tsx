@@ -17,8 +17,11 @@ function WalletRow(props: WalletRowProps) {
 				<img
 					className="me-2"
 					width={16}
-					alt="Symbol logo"
 					src={`/img/icons/${props.symbol.toLowerCase()}.svg`}
+					onError={(e) => {
+						e.currentTarget.onerror = null;
+						e.currentTarget.src = `/img/icons/unknown.svg`;
+					}}
 				/>
 				{props.symbol}
 			</td>

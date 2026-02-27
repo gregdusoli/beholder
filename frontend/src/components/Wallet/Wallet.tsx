@@ -1,25 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WalletRow from "./WalletRow";
+import { getBalance } from "../../services/ExchangeService";
 
 function Wallet() {
 	const [fiat, setFiat] = useState("~USD 100");
-	const [balances, setBalances] = useState([
-		{
-			symbol: "BTC",
-			available: "0.001",
-			onOrder: "0.000",
-		},
-		{
-			symbol: "ETH",
-			available: "0.045",
-			onOrder: "0.100",
-		},
-		{
-			symbol: "XLM",
-			available: "1.032",
-			onOrder: "0.000",
-		},
-	]);
+	const [balances, setBalances] = useState<any[]>([{}]);
+
+	function normalizeResponse(data: any) {
+		return Object.entries(data)
+			.map((item: any) => {
+				return {
+					symbol: item[0],
+					available: item[1].available,
+					onOrder: item[1].onOrder,
+				};
+			})
+			.sort((a, b) => {
+				if (a.symbol > b.symbol) return 1;
+				if (a.symbol < b.symbol) return -1;
+				return 0;
+			});
+	}
+
+	useEffect(() => {
+		getBalance()
+			.then((res) => {
+				console.log(res);
+				const data = normalizeResponse(res);
+				setBalances(data);
+				setFiat(res.fiatEstimate);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}, []);
 
 	return (
 		<div className="col-12">

@@ -1,7 +1,7 @@
 import { restClient } from "./BaseService";
 
 export async function doLogin(email: string, password: string) {
-	const response = await restClient.send.post(`${restClient.baseUrl}/login`, {
+	const response = await restClient.post(`/login`, {
 		email,
 		password,
 	});
@@ -10,10 +10,7 @@ export async function doLogin(email: string, password: string) {
 }
 
 export async function doLogout() {
-	const response = await restClient.send.post(
-		`${restClient.baseUrl}/logout`,
-		{}
-	);
+	const response = await restClient.post(`/logout`, {});
 
 	return response.data;
 }

@@ -1,13 +1,12 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 axios.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem("token");
+		const session = localStorage.getItem("session");
 
-		if (token) {
-			config.headers.Authorization = `Bearer ${token}`;
+		if (session) {
+			const token = JSON.parse(session).token;
+			config.headers.Authorization = token;
 		}
 
 		return config;
@@ -31,7 +30,6 @@ axios.interceptors.response.use(
 	}
 );
 
-export const restClient = {
-	send: axios,
-	baseUrl: API_URL,
-};
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
+export const restClient = axios;
