@@ -1,7 +1,8 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import database from "../db.ts";
+import { UserEntity } from "@entities/user-entity.ts";
 
-const userModel = database.define("user", {
+export const UserModel = database.define<Model<UserEntity>>("user", {
 	id: {
 		type: DataTypes.UUID,
 		allowNull: false,
@@ -31,5 +32,3 @@ const userModel = database.define("user", {
 	createdAt: DataTypes.DATE,
 	updatedAt: DataTypes.DATE,
 });
-
-export default userModel;

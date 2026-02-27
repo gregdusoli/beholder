@@ -1,7 +1,8 @@
-import { DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import database from "../db.ts";
+import { SymbolEntity } from "@entities/symbol-entity.ts";
 
-const symbolModel = database.define("symbol", {
+export const SymbolModel = database.define<Model<SymbolEntity>>("symbol", {
 	symbol: {
 		type: DataTypes.STRING,
 		allowNull: false,
@@ -48,5 +49,3 @@ const symbolModel = database.define("symbol", {
 		defaultValue: DataTypes.NOW,
 	},
 });
-
-export default symbolModel;

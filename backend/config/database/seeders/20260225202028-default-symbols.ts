@@ -1,9 +1,9 @@
 import type { QueryInterface } from "sequelize";
-import symbolsController from "../../../src/controllers/symbols-controller.ts";
+import SymbolsController from "../../../src/controllers/symbols-controller.ts";
 
 export default {
 	async up(queryInterface: QueryInterface) {
-		await symbolsController.syncSymbols();
+		await SymbolsController.syncSymbols();
 	},
 
 	async down(queryInterface: QueryInterface) {

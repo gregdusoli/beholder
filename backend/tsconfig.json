@@ -50,6 +50,7 @@
       "@controllers/*": ["./src/controllers/*"],
       "@middlewares/*": ["./src/middlewares/*"],
       "@models/*": ["./src/models/*"],
+			"@entities/*": ["./src/entities/*"],
 			"@repositories/*": ["./src/repositories/*"]
     }
   },

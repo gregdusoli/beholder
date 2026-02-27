@@ -1,6 +1,6 @@
 import Binance from "node-binance-api";
 
-export class ExchangeService {
+export default class ExchangeService {
 	protected exchange: Binance;
 
 	constructor() {
@@ -27,5 +27,15 @@ export class ExchangeService {
 	async balance() {
 		await this.exchange.useServerTime();
 		return this.exchange.balance();
+	}
+
+	async tickerStream(callback: Function) {
+		this.exchange.websockets.prevDay(
+			undefined,
+			(_, converted) => {
+				callback(converted);
+			},
+			() => true
+		);
 	}
 }

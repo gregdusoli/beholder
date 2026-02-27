@@ -1,6 +1,6 @@
-import authController from "@controllers/auth-controller.ts";
-import authMiddleware from "@middlewares/auth-middleware.ts";
-import exchangeController from "@controllers/exchange-controller.ts";
+import AuthController from "@controllers/auth-controller.ts";
+import ExchangeController from "@controllers/exchange-controller.ts";
+import AuthMiddleware from "@middlewares/auth-middleware.ts";
 import { Router } from "express";
 
 const router = Router();
@@ -9,11 +9,19 @@ router.get("/health", (_, res) => {
 	res.status(200).send("Service is healthy");
 });
 
-router.post("/login", authController.doLogin);
+router.post("/login", AuthController.doLogin.bind(AuthController));
 
-router.post("/logout", authController.doLogout);
+router.post(
+	"/logout",
+	AuthMiddleware,
+	AuthController.doLogout.bind(AuthController)
+);
 
-router.get("/exchange/balance", authMiddleware, exchangeController.getBalance);
+router.get(
+	"/exchange/balance",
+	AuthMiddleware,
+	ExchangeController.getBalance.bind(ExchangeController)
+);
 
 router.use("/", (_, res) => {
 	res.status(400).send("Bad Request");

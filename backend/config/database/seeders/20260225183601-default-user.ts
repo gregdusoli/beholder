@@ -1,21 +1,24 @@
 import { hashSync } from "bcryptjs";
-import { randomUUID } from "crypto";
-import type { QueryInterface } from "sequelize";
+import { QueryTypes, type QueryInterface } from "sequelize";
 
 export default {
-	async up(queryInterface: QueryInterface) {
-		const existingUser = await queryInterface.rawSelect("users", {}, ["id"])[0];
+	async up(queryInterface: QueryInterface, Sequelize) {
+		const existingUser = await queryInterface.sequelize.query(
+			"SELECT * FROM users LIMIT 1",
+			{
+				type: QueryTypes.SELECT,
+			}
+		);
 
-		if (existingUser) {
-			console.log("Users already exist. Skipping seeding.");
-			return;
+		if (existingUser?.length) {
+			return console.log("Users already exist, skipping seeding");
 		}
 
 		await queryInterface.bulkInsert(
 			"users",
 			[
 				{
-					id: randomUUID(),
+					id: crypto.randomUUID(),
 					name: "Beholder User",
 					email: "beholder@example.com",
 					password: hashSync("123456", 10),
