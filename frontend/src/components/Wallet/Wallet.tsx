@@ -3,7 +3,8 @@ import WalletRow from "./WalletRow";
 import { getBalance } from "../../services/ExchangeService";
 
 function Wallet() {
-	const [fiat, setFiat] = useState("~USD 100");
+	const [loading, setLoading] = useState(false);
+	const [fiat, setFiat] = useState("");
 	const [balances, setBalances] = useState<any[]>([{}]);
 
 	function normalizeResponse(data: any) {
@@ -23,15 +24,19 @@ function Wallet() {
 	}
 
 	useEffect(() => {
+		setLoading(true);
+
 		getBalance()
 			.then((res) => {
-				console.log(res);
 				const data = normalizeResponse(res);
+
 				setBalances(data);
 				setFiat(res.fiatEstimate);
+				setLoading(false);
 			})
 			.catch((err) => {
 				console.error(err);
+				setLoading(false);
 			});
 	}, []);
 
@@ -61,7 +66,7 @@ function Wallet() {
 							</tr>
 						</thead>
 						<tbody>
-							{balances && balances.length ? (
+							{!loading && balances && balances.length ? (
 								balances.map((item) => (
 									<WalletRow
 										key={item.symbol}
@@ -71,7 +76,9 @@ function Wallet() {
 									/>
 								))
 							) : (
-								<></>
+								<tr className="mb-3">
+									<td colSpan={3}>Loading...</td>
+								</tr>
 							)}
 						</tbody>
 					</table>

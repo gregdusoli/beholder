@@ -4,6 +4,7 @@ import TickerRow from "./TickerRow";
 
 const exchangeWebsocketUrl = import.meta.env.VITE_EXCHANGE_WEBSOCKET_URL;
 const TOP_COINS = [
+	"ADAUSDT",
 	"BTCUSDT",
 	"ETHUSDT",
 	"SOLUSDT",
