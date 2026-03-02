@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import database from "../db.ts";
+import database from "../database.ts";
 import { UserEntity } from "@entities/user-entity.ts";
 
 export const UserModel = database.define<Model<UserEntity>>("user", {

@@ -5,28 +5,29 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import router from "./router.ts";
+import logger from "@utils/logger.ts";
 
 dotenv.config();
-const app = express();
+const application = express();
 
-app.use(helmet());
-app.use(express.json());
-app.use(
+application.use(helmet());
+application.use(express.json());
+application.use(
 	cors({
 		origin: process.env.CORS_ORIGIN,
 	})
 );
-app.use(
+application.use(
 	morgan("dev", {
 		immediate: false,
 		stream: {
 			write: (message) => {
-				console.log(`\n${message.trim()}`);
+				logger("info", `\n${message.trim()}`);
 			},
 		},
 	})
 );
-app.use(router);
-app.use(errorMiddleware);
+application.use(router);
+application.use(errorMiddleware);
 
-export default app;
+export default application;

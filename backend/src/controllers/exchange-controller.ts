@@ -1,18 +1,45 @@
 import ExchangeService from "@services/exchange-service.ts";
-import logger from "@utils/logger.ts";
 import type { Request, Response } from "express";
+import Beholder from "../beholder.ts";
 
 class ExchangeController {
 	private readonly fiat = process.env.DEFAULT_FIAT ?? "USD";
 
-	constructor(private readonly exchangeService = new ExchangeService()) {}
+	constructor(
+		private readonly beholder = Beholder.getInstance(),
+		private readonly exchangeService = new ExchangeService()
+	) {}
 
 	async getBalance(req: Request, res: Response) {
-		const userId = res.locals.token.id;
+		try {
+			const info: any = await this.exchangeService.balance();
+			const coins = Object.keys(info);
 
-		const balance: any = await this.exchangeService.balance();
-		balance.fiatEstimate = `~${this.fiat} 100`;
-		res.json(balance);
+			const partials = await Promise.all(
+				coins.map(async (coin) => {
+					let partial =
+						parseFloat(info[coin].available) + parseFloat(info[coin].onOrder);
+
+					if (partial > 0) {
+						const estimate = await this.beholder.tryFiatConversion({
+							baseAsset: coin,
+							baseQty: String(partial),
+							fiat: this.fiat,
+						});
+
+						info[coin].fiatEstimate = estimate;
+						return estimate;
+					}
+					info[coin].fiatEstimate = 0;
+					return 0;
+				})
+			);
+
+			const total = partials.reduce((acc, p) => acc + p, 0);
+			info.fiatEstimate = `~${this.fiat} ${total.toFixed(2)}`;
+
+			res.json(info);
+		} catch (error) {}
 	}
 }
 

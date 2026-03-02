@@ -2,8 +2,8 @@ import UsersRepository from "@repositories/users-repository.ts";
 import ExchangeMonitor from "@services/exchange-monitor.ts";
 import logger from "@utils/logger.ts";
 import type { Express } from "express";
-import App from "./app.ts";
-import Database from "./db.ts";
+import App from "./application.ts";
+import Database from "./database.ts";
 import { Sequelize } from "sequelize";
 
 export class Server {
@@ -22,7 +22,7 @@ export class Server {
 		const users = await this.usersRepository.getActiveUsers();
 
 		if (!users || !users.length) {
-			return logger("warn", "No active users found. Exiting... ");
+			return logger("warn", "No active users found, exiting", "core");
 		}
 
 		return users;
@@ -38,7 +38,8 @@ export class Server {
 		this.appInstance.listen(this.appPort, () => {
 			logger(
 				"success",
-				`${this.appName} server running on port ${this.appPort}`
+				`${this.appName} server running on port ${this.appPort}`,
+				"core"
 			);
 		});
 	}

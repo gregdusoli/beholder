@@ -1,5 +1,6 @@
 import { hashSync } from "bcryptjs";
 import { QueryTypes, type QueryInterface } from "sequelize";
+import logger from "../../../src/utils/logger.ts";
 
 export default {
 	async up(queryInterface: QueryInterface, Sequelize) {
@@ -11,7 +12,7 @@ export default {
 		);
 
 		if (existingUser?.length) {
-			return console.log("Users already exist, skipping seeding");
+			return logger("info", "Users already exist, skipping seeding", "core");
 		}
 
 		await queryInterface.bulkInsert(

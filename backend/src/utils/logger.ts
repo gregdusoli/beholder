@@ -1,7 +1,20 @@
 type LogLevel = "info" | "warn" | "error" | "success";
+type LogOrigin = "core" | "application" | "exchange";
 
-export default (key: LogLevel = "info", data: any) => {
+const appLogsOn = process.env.APP_LOGS === "true";
+const exchangeLogsOn =
+	process.env.EXCHANGE_LOGS === "minimal" ||
+	process.env.EXCHANGE_LOGS === "verbose";
+
+export default (
+	key: LogLevel = "info",
+	data: any,
+	origin: LogOrigin = "application"
+) => {
 	let content;
+
+	if (origin === "application" && !appLogsOn) return;
+	if (origin === "exchange" && !exchangeLogsOn) return;
 
 	try {
 		content = JSON.parse(data);
@@ -11,20 +24,12 @@ export default (key: LogLevel = "info", data: any) => {
 
 	const message = `\n[${key}] ${content}`;
 
-	if (key === "success") {
-		console.log(`\x1b[32m${message}\x1b[0m`);
-		return;
-	}
+	const logging: Record<LogLevel, (msg: string) => void> = {
+		["info"]: (msg) => console.log(`\x1b[36m${msg}\x1b[0m`),
+		["warn"]: (msg) => console.warn(`\x1b[33m${msg}\x1b[0m`),
+		["error"]: (msg) => console.error(`\x1b[31m${msg}\x1b[0m`),
+		["success"]: (msg) => console.log(`\x1b[32m${msg}\x1b[0m`),
+	};
 
-	if (key === "error") {
-		console.error(`\x1b[31m${message}\x1b[0m`);
-		return;
-	}
-
-	if (key === "warn") {
-		console.warn(`\x1b[33m${message}\x1b[0m`);
-		return;
-	}
-
-	console.log(message);
+	logging[key](message);
 };
