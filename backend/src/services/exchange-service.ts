@@ -1,4 +1,4 @@
-import logger from "@utils/logger.ts";
+import Logger from "@utils/logger.ts";
 import Binance from "node-binance-api";
 
 export default class ExchangeService {
@@ -8,7 +8,7 @@ export default class ExchangeService {
 
 	protected exchange: Binance;
 
-	constructor() {
+	constructor(private readonly logger = Logger.getInstance()) {
 		this.validateCredentials();
 		this.exchange = new Binance({
 			APIKEY: process.env.EXCHANGE_API_KEY!,
@@ -21,7 +21,7 @@ export default class ExchangeService {
 
 	private validateCredentials() {
 		if (!this.exchangeApiKey || !this.exchangeApiSecret) {
-			throw new Error("Missing Exchange API credentials");
+			throw new Error("Exchange API credentials are required. Please set EXCHANGE_API_KEY and EXCHANGE_API_SECRET environment variables.");
 		}
 	}
 
@@ -40,10 +40,9 @@ export default class ExchangeService {
 			(undefined, data) => {
 				const type = typeof data?.length ? "array" : "object";
 
-				logger(
-					"info",
+				this.logger.info(
 					`${data?.length || 0} received market stream tickers`,
-					"exchange"
+					"core"
 				);
 
 				callback(type === "array" ? data : Object.values(data));

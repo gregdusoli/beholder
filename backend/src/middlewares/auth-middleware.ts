@@ -1,7 +1,9 @@
 import AuthController from "@controllers/auth-controller.ts";
-import logger from "@utils/logger.ts";
+import Logger from "@utils/logger.ts";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
+const logger = Logger.getInstance();
 
 const authMiddleware = async (
 	req: Request,
@@ -24,7 +26,7 @@ const authMiddleware = async (
 				}
 			}
 		} catch (error) {
-			logger("error", `Invalid token: ${error}`);
+			logger.error(`Invalid token: ${error}`, "application");
 		}
 	}
 

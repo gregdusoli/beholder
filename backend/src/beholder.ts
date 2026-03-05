@@ -1,6 +1,7 @@
 import { Cache } from "@utils/cache.ts";
-import logger from "@utils/logger.ts";
+import Logger from "@utils/logger.ts";
 import { isEmpty } from "@utils/type-utils.ts";
+import { DOLLAR_COINS, FIAT_COINS } from "./config/constants.ts";
 
 interface BeholderProps {
 	symbol: string;
@@ -18,17 +19,6 @@ interface ConversionProps {
 }
 
 class Beholder extends Cache {
-	static readonly FIAT_COINS = ["BRL", "EUR", "GBP"];
-
-	static readonly DOLLAR_COINS = [
-		"USD",
-		"UST",
-		"USDC",
-		"USDT",
-		"TUSD",
-		"FDUSD",
-	];
-
 	static instance: Beholder;
 
 	constructor(automations = []) {
@@ -47,7 +37,7 @@ class Beholder extends Cache {
 	async setCache(props: BeholderProps) {
 		const memoryKey = this.buildMemoryKey(props.symbol, props.index);
 
-		logger("info", `Cache memory updated: ${memoryKey}}`);
+		Logger.getInstance().info(`Cache memory updated: ${memoryKey}}`, "core");
 
 		this.set({ [memoryKey]: props.value });
 	}
@@ -137,10 +127,10 @@ class Beholder extends Cache {
 		quoteAsset: string;
 		baseQty: string;
 	}) {
-		if (Beholder.DOLLAR_COINS.includes(props.baseAsset))
+		if (DOLLAR_COINS.includes(props.baseAsset))
 			return parseFloat(props.baseQty);
 
-		if (Beholder.DOLLAR_COINS.includes(props.baseAsset))
+		if (DOLLAR_COINS.includes(props.baseAsset))
 			return parseFloat(props.baseQty);
 
 		const ticker = await this.getMemory(
@@ -155,11 +145,11 @@ class Beholder extends Cache {
 	}
 
 	async tryUsdConvesion(props: ConversionProps) {
-		if (Beholder.DOLLAR_COINS.includes(props.baseAsset)) {
+		if (DOLLAR_COINS.includes(props.baseAsset)) {
 			return parseFloat(props.baseQty);
 		}
 
-		if (Beholder.FIAT_COINS.includes(props.baseAsset)) {
+		if (FIAT_COINS.includes(props.baseAsset)) {
 			const converted = await this.getFiatConversion(
 				"USDT",
 				props.baseAsset,
@@ -169,10 +159,10 @@ class Beholder extends Cache {
 			return converted;
 		}
 
-		for (let i = 0; i < Beholder.DOLLAR_COINS.length; i++) {
+		for (let i = 0; i < DOLLAR_COINS.length; i++) {
 			const converted = await this.getStableConversion({
 				baseAsset: props.baseAsset,
-				quoteAsset: Beholder.DOLLAR_COINS[i]!,
+				quoteAsset: DOLLAR_COINS[i]!,
 				baseQty: props.baseQty,
 			});
 
@@ -188,7 +178,7 @@ class Beholder extends Cache {
 		if (props?.fiat) state.fiat = props.fiat.toUpperCase();
 
 		if (
-			Beholder.FIAT_COINS.includes(state.baseAsset) &&
+			FIAT_COINS.includes(state.baseAsset) &&
 			state.baseAsset === state.fiat
 		) {
 			return parseFloat(state.baseQty);
@@ -216,12 +206,16 @@ class Beholder extends Cache {
 		return usd;
 	}
 
-	static getInstance() {
+	static getInstance(): Beholder {
 		if (!Beholder.instance) {
 			Beholder.instance = new Beholder();
 		}
-
 		return Beholder.instance;
+	}
+
+	async init(): Promise<void> {
+		Logger.getInstance().info("Beholder initialized", "core");
+		// Inicializações específicas do Beholder podem ser adicionadas aqui
 	}
 }
 

@@ -1,17 +1,16 @@
-import logger from "@utils/logger.ts";
 import Beholder from "../beholder.ts";
 import ExchangeService from "./exchange-service.ts";
 import { Market } from "./exchange-interface.ts";
+import Logger from "@utils/logger.ts";
 
-export default class ExchangeMonitor {
+class ExchangeMonitor {
 	constructor(
+		private readonly logger = Logger.getInstance(),
 		private readonly beholder = Beholder.getInstance(),
 		private readonly exchangeService = new ExchangeService()
-	) {}
+	) { }
 
-	starTickerMonitor() {
-		logger("info", "Exchange Monitor: Ticker monitor loaded");
-
+	startTickerMonitor() {
 		this.exchangeService.tickerStream(async (markets: Market[]) => {
 			if (!markets || !markets.length) return;
 
@@ -24,12 +23,14 @@ export default class ExchangeMonitor {
 			);
 
 			await Promise.all(promises);
+			this.logger.info(`Updated ${markets.length} tickers in memory`, "exchange");
 		});
 	}
 
 	async init(userId: string) {
-		this.starTickerMonitor();
-
-		logger("info", "Exchange Monitor successfully initialized");
+		this.startTickerMonitor();
+		this.logger.info(`Exchange Monitor initialized for user: ${userId}`, "core");
 	}
 }
+
+export default ExchangeMonitor;

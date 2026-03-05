@@ -4,7 +4,7 @@ export default class symbolsRepository {
 	async bulkInsert(symbols: string[]) {
 		const result = await SymbolModel.bulkCreate(symbols as any);
 
-		return result.map((symbol) => symbol.get({ plain: true }));
+		return result.map((symbol: any) => symbol.get({ plain: true }));
 	}
 
 	async deleteAll() {
