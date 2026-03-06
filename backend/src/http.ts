@@ -1,17 +1,17 @@
-import errorMiddleware from "@middlewares/error-middleware.ts";
-import Logger from "@utils/logger.ts";
+import errorMiddleware from "@middlewares/error-middleware";
+import Logger from "@utils/logger";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express, { type Express } from "express";
 import helmet from "helmet";
 import * as http from "http";
 import morgan from "morgan";
-import router from "./router.ts";
+import router from "./router";
 
 dotenv.config();
 
-export class HttpApi {
-	private static instance: HttpApi;
+export class HttpServer {
+	private static instance: HttpServer;
 
 	private readonly express: Express;
 
@@ -63,12 +63,12 @@ export class HttpApi {
 	}
 
 
-	static getInstance(): HttpApi {
-		if (!HttpApi.instance) {
-			HttpApi.instance = new HttpApi();
+	static getInstance(): HttpServer {
+		if (!HttpServer.instance) {
+			HttpServer.instance = new HttpServer();
 		}
-		return HttpApi.instance;
+		return HttpServer.instance;
 	}
 }
 
-export default HttpApi;
+export default HttpServer;

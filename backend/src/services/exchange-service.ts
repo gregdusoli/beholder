@@ -1,4 +1,4 @@
-import Logger from "@utils/logger.ts";
+import Logger from "@utils/logger";
 import Binance from "node-binance-api";
 
 export default class ExchangeService {
@@ -42,7 +42,7 @@ export default class ExchangeService {
 
 				this.logger.info(
 					`${data?.length || 0} received market stream tickers`,
-					"core"
+					"exchange"
 				);
 
 				callback(type === "array" ? data : Object.values(data));

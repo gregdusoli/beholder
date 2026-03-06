@@ -1,4 +1,4 @@
-import Logger from "@utils/logger.ts";
+import Logger from "@utils/logger";
 import { ErrorRequestHandler } from "express";
 
 const logger = Logger.getInstance();

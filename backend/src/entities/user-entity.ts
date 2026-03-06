@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base-entity.ts";
+import { BaseEntity } from "./base-entity";
 
 export interface UserEntity extends BaseEntity {
 	id: string;

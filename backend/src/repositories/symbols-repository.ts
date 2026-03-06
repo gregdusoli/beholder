@@ -1,4 +1,4 @@
-import { SymbolModel } from "@models/symbol-model.ts";
+import { SymbolModel } from "@models/symbol-model";
 
 export default class symbolsRepository {
 	async bulkInsert(symbols: string[]) {

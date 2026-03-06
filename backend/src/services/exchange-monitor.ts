@@ -1,20 +1,22 @@
-import Beholder from "../beholder.ts";
-import ExchangeService from "./exchange-service.ts";
-import { Market } from "./exchange-interface.ts";
-import Logger from "@utils/logger.ts";
+import type { MarketProps } from "@interfaces/market";
+import Logger from "@utils/logger";
+import Beholder from "../beholder";
+import WebsocketServer from "../websocket";
+import ExchangeService from "./exchange-service";
 
-class ExchangeMonitor {
+class MarketMonitorService {
 	constructor(
 		private readonly logger = Logger.getInstance(),
 		private readonly beholder = Beholder.getInstance(),
-		private readonly exchangeService = new ExchangeService()
+		private readonly exchangeService = new ExchangeService(),
+		private readonly websocketService = WebsocketServer.getInstance(),
 	) { }
 
 	startTickerMonitor() {
-		this.exchangeService.tickerStream(async (markets: Market[]) => {
+		this.exchangeService.tickerStream(async (markets: MarketProps[]) => {
 			if (!markets || !markets.length) return;
 
-			const promises = markets.map((market: Market) =>
+			const promises = markets.map((market: MarketProps) =>
 				this.beholder.updateMemory({
 					index: "TICKER",
 					symbol: market.symbol,
@@ -33,4 +35,4 @@ class ExchangeMonitor {
 	}
 }
 
-export default ExchangeMonitor;
+export default MarketMonitorService;

@@ -1,6 +1,6 @@
-import ExchangeService from "@services/exchange-service.ts";
+import ExchangeService from "@services/exchange-service";
 import type { Request, Response } from "express";
-import Beholder from "../beholder.ts";
+import Beholder from "../beholder";
 
 class ExchangeController {
 	private readonly fiat = process.env.DEFAULT_FIAT ?? "USD";
@@ -8,7 +8,7 @@ class ExchangeController {
 	constructor(
 		private readonly beholder = Beholder.getInstance(),
 		private readonly exchangeService = new ExchangeService()
-	) {}
+	) { }
 
 	async getBalance(req: Request, res: Response) {
 		try {
@@ -39,7 +39,7 @@ class ExchangeController {
 			info.fiatEstimate = `~${this.fiat} ${total.toFixed(2)}`;
 
 			res.json(info);
-		} catch (error) {}
+		} catch (error) { }
 	}
 }
 

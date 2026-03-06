@@ -1,9 +1,10 @@
-import Logger from "@utils/logger.ts";
-import Application from "./application.ts";
+import Logger from "@utils/logger";
+import Application from "./application";
 
 async function bootstrap(): Promise<void> {
 	try {
 		const application = Application.getInstance();
+
 		await application.start();
 	} catch (error) {
 		Logger.getInstance().error(`Failed to start application: ${error}`, "core");

@@ -1,5 +1,5 @@
-import AuthController from "@controllers/auth-controller.ts";
-import Logger from "@utils/logger.ts";
+import AuthController from "@controllers/auth-controller";
+import Logger from "@utils/logger";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 

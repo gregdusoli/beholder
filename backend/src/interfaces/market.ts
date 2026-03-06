@@ -1,4 +1,4 @@
-export interface Market {
+export interface MarketProps {
 	eventType: string;
 	eventTime: number;
 	symbol: string;

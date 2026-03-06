@@ -1,9 +1,11 @@
 import { hashSync } from "bcryptjs";
 import { QueryTypes, type QueryInterface } from "sequelize";
-import logger from "../../../src/utils/logger.ts";
+import Logger from "../../../src/utils/logger";
+
+const logger = Logger.getInstance();
 
 export default {
-	async up(queryInterface: QueryInterface, Sequelize) {
+	async up(queryInterface: QueryInterface) {
 		const existingUser = await queryInterface.sequelize.query(
 			"SELECT * FROM users LIMIT 1",
 			{
@@ -12,7 +14,8 @@ export default {
 		);
 
 		if (existingUser?.length) {
-			return logger("info", "Users already exist, skipping seeding", "core");
+			logger.info("Users already exist, skipping seeding", "core");
+			return;
 		}
 
 		await queryInterface.bulkInsert(

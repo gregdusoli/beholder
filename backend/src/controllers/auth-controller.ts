@@ -1,4 +1,4 @@
-import UsersRepository from "@repositories/users-repository.ts";
+import UsersRepository from "@repositories/users-repository";
 import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 class AuthController {
 	private blacklist: any = {};
 
-	constructor(private readonly usersRepository = new UsersRepository()) {}
+	constructor(private readonly usersRepository = new UsersRepository()) { }
 
 	async doLogin(req: Request, res: Response) {
 		const { email, password } = req.body;

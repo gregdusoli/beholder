@@ -1,6 +1,6 @@
-import { SymbolEntity } from "@entities/symbol-entity.ts";
+import type { SymbolEntity } from "@entities/symbol-entity";
 import { DataTypes, Model } from "sequelize";
-import { Database } from "../database.ts";
+import { Database } from "../database";
 
 export const SymbolModel = Database.getInstance().define<Model<SymbolEntity>>("symbol", {
 	symbol: {

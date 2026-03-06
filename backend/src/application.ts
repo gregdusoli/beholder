@@ -1,22 +1,26 @@
-import UsersRepository from "@repositories/users-repository.ts";
-import ExchangeMonitor from "@services/exchange-monitor.ts";
-import Logger from "@utils/logger.ts";
-import Database from "./database.ts";
-import HttpApi from "./http.ts";
+import UsersRepository from "@repositories/users-repository";
+import MarketMonitorService from "@services/exchange-monitor";
+import Logger from "@utils/logger";
+import Database from "./database";
+import HttpServer from "./http";
+import WebsocketServer from "./websocket";
 
 export class Application {
 	private static instance: Application;
 
 	private constructor(
 		private readonly logger = Logger.getInstance(),
-		private readonly httpApi = HttpApi.getInstance(),
+		private readonly httpApi = HttpServer.getInstance(),
 		private readonly database = Database.getInstance(),
+		private readonly websocketServer = WebsocketServer.getInstance(),
 		private readonly usersRepository = new UsersRepository(),
-		private readonly exchangeMonitor = new ExchangeMonitor()
+		private readonly exchangeMonitor = new MarketMonitorService()
 	) { }
 
 	private async initializeServices(): Promise<void> {
 		await this.database.init();
+		const httpServer = await this.httpApi.init();
+		await this.websocketServer.init(httpServer);
 
 		const activeUsers: any = await this.usersRepository.getActiveUsers();
 		if (activeUsers) {
@@ -33,8 +37,6 @@ export class Application {
 
 	async start(): Promise<void> {
 		await this.initializeServices();
-		await this.httpApi.init();
-
 		this.logger.info("Application server successfully started", "core");
 	}
 }

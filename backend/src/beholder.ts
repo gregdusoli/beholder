@@ -1,27 +1,13 @@
-import { Cache } from "@utils/cache.ts";
-import Logger from "@utils/logger.ts";
-import { isEmpty } from "@utils/type-utils.ts";
-import { DOLLAR_COINS, FIAT_COINS } from "./config/constants.ts";
-
-interface BeholderProps {
-	symbol: string;
-	index: string;
-	value: any;
-	ticker?: any | undefined;
-	interval?: string | number | undefined;
-	canRunAutomations?: boolean | undefined;
-}
-
-interface ConversionProps {
-	baseAsset: string;
-	baseQty: string;
-	fiat?: string;
-}
+import type { BeholderProps, ConversionProps } from "@interfaces/beholder";
+import { Cache } from "@utils/cache";
+import Logger from "@utils/logger";
+import { isEmpty } from "@utils/type-utils";
+import { DOLLAR_COINS, FIAT_COINS } from "./config/constants";
 
 class Beholder extends Cache {
 	static instance: Beholder;
 
-	constructor(automations = []) {
+	constructor(private readonly logger = Logger.getInstance()) {
 		super();
 	}
 
@@ -37,9 +23,8 @@ class Beholder extends Cache {
 	async setCache(props: BeholderProps) {
 		const memoryKey = this.buildMemoryKey(props.symbol, props.index);
 
-		Logger.getInstance().info(`Cache memory updated: ${memoryKey}}`, "core");
-
 		this.set({ [memoryKey]: props.value });
+		this.logger.info(`Cache memory updated: ${memoryKey}}`, "core");
 	}
 
 	async getMemory(
@@ -49,7 +34,6 @@ class Beholder extends Cache {
 	) {
 		if (symbolOrKey && index) {
 			const memoryKey = this.buildMemoryKey(symbolOrKey, index, interval);
-
 			return this.get(memoryKey);
 		} else if (symbolOrKey) {
 			return this.get(symbolOrKey);
@@ -66,18 +50,18 @@ class Beholder extends Cache {
 
 		return props.index === "TICKER"
 			? this.updateTickerMemory({
-					symbol: payload.symbol,
-					index: payload.index,
-					value: payload.value,
-					canRunAutomations: payload.canRunAutomations,
-			  })
+				symbol: payload.symbol,
+				index: payload.index,
+				value: payload.value,
+				canRunAutomations: payload.canRunAutomations,
+			})
 			: this.setCache({
-					symbol: payload.symbol,
-					index: payload.index,
-					interval: payload.interval,
-					value: payload.value,
-					canRunAutomations: payload.canRunAutomations,
-			  });
+				symbol: payload.symbol,
+				index: payload.index,
+				interval: payload.interval,
+				value: payload.value,
+				canRunAutomations: payload.canRunAutomations,
+			});
 	}
 
 	async updateTickerMemory(props: BeholderProps) {
@@ -214,8 +198,7 @@ class Beholder extends Cache {
 	}
 
 	async init(): Promise<void> {
-		Logger.getInstance().info("Beholder initialized", "core");
-		// Inicializações específicas do Beholder podem ser adicionadas aqui
+		this.logger.info("Beholder initialized", "core");
 	}
 }
 

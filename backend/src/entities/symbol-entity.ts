@@ -1,4 +1,4 @@
-import { BaseEntity } from "./base-entity.ts";
+import { BaseEntity } from "./base-entity";
 
 export interface SymbolEntity extends BaseEntity {
 	symbol: string;

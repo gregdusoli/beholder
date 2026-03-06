@@ -1,5 +1,5 @@
-import SymbolsRepository from "@repositories/symbols-repository.ts";
-import ExchangeService from "@services/exchange-service.ts";
+import SymbolsRepository from "@repositories/symbols-repository";
+import ExchangeService from "@services/exchange-service";
 
 class SymbolsController {
 	private readonly useLeverageTokens = process.env.LEVERAGE_TOKENS === "true";
@@ -11,7 +11,7 @@ class SymbolsController {
 	constructor(
 		private readonly symbolsRepository = new SymbolsRepository(),
 		private readonly exchangeService = new ExchangeService()
-	) {}
+	) { }
 
 	async syncSymbols() {
 		const data = await this.exchangeService.exchangeInfo();

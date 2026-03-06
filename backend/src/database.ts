@@ -1,3 +1,4 @@
+import Logger from "@utils/logger";
 import dotenv from "dotenv";
 import { Sequelize, type Options, Model } from "sequelize";
 
@@ -8,10 +9,14 @@ export class Database {
 
 	private readonly sequelize: Sequelize;
 
+	private readonly dbName: string = process.env.DB_NAME!;
+
+	private readonly dbUser: string = process.env.DB_USER!;
+
+	private readonly dbPass: string = process.env.DB_PASS!;
+
 	private constructor(
-		private readonly dbName: string = process.env.DB_NAME!,
-		private readonly dbUser: string = process.env.DB_USER!,
-		private readonly dbPass: string = process.env.DB_PASS!,
+		private readonly logger = Logger.getInstance(),
 		private readonly config: Options = {
 			host: process.env.DB_HOST!,
 			port: parseInt(process.env.DB_PORT!),
@@ -41,9 +46,10 @@ export class Database {
 	async init(): Promise<void> {
 		try {
 			await this.sequelize.authenticate();
-			console.log("Database connection established successfully");
+
+			this.logger.info("Database connection established successfully", "core");
 		} catch (error) {
-			console.error("Unable to connect to database:", error);
+			this.logger.error(`Unable to connect to database: ${error}`, "core");
 			throw error;
 		}
 	}

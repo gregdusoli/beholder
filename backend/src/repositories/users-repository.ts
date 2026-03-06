@@ -1,4 +1,4 @@
-import { UserModel } from "@models/user-model.ts";
+import { UserModel } from "@models/user-model";
 
 export default class UsersRepository {
 	async getUserByEmail(email: string) {
