@@ -24,7 +24,7 @@ class Beholder extends Cache {
 		const memoryKey = this.buildMemoryKey(props.symbol, props.index);
 
 		this.set({ [memoryKey]: props.value });
-		this.logger.info(`Cache memory updated: ${memoryKey}}`, "core");
+		this.logger.debug(`Cache memory updated: ${memoryKey}}`, "application");
 	}
 
 	async getMemory(

@@ -1,14 +1,16 @@
-type LogLevel = "info" | "warn" | "error" | "success";
-type LogOrigin = "core" | "application" | "exchange";
+import type { LogLevel, LogOrigin } from "@interfaces/logger";
 
-class Logger {
+export class Logger {
 	private static instance: Logger;
+
+	private readonly debugLogsOn: boolean;
 
 	private readonly appLogsOn: boolean;
 
 	private readonly exchangeLogsOn: boolean;
 
 	private constructor() {
+		this.debugLogsOn = process.env.DEBUG_LOGS === "true";
 		this.appLogsOn = process.env.APP_LOGS === "true";
 		this.exchangeLogsOn =
 			process.env.EXCHANGE_LOGS === "minimal" ||
@@ -19,14 +21,13 @@ class Logger {
 		if (!Logger.instance) {
 			Logger.instance = new Logger();
 		}
-
 		return Logger.instance;
 	}
 
-	private shouldAct(origin: LogOrigin) {
+	private shouldAct(origin: LogOrigin, level?: LogLevel) {
 		if (origin === "application" && !this.appLogsOn) return false;
 		if (origin === "exchange" && !this.exchangeLogsOn) return false;
-
+		if (level && level === "debug" && !this.debugLogsOn) return false;
 		return true;
 	}
 
@@ -64,6 +65,14 @@ class Logger {
 		const message = this.buildMessage("warn", data);
 
 		console.warn(`\x1b[33m${message}\x1b[0m`);
+	}
+
+	debug(data: any, origin: LogOrigin): void {
+		if (!this.shouldAct(origin, "debug")) return;
+
+		const message = this.buildMessage("debug", data);
+
+		console.debug(`\x1b[34m${message}\x1b[0m`);
 	}
 
 	error(data: any, origin: LogOrigin): void {

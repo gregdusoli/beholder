@@ -30,6 +30,11 @@ class MarketMonitorService {
 	}
 
 	async init(userId: string) {
+		// Testando conexão WebSocket
+		setInterval(() => {
+			this.websocketService.broadcast({ type: "ping" });
+		}, 3000);
+
 		this.startTickerMonitor();
 		this.logger.info(`Exchange Monitor initialized for user: ${userId}`, "core");
 	}

@@ -23,15 +23,28 @@ class WebsocketServer {
 	onConnection(ws: WebSocket, req: any) {
 		ws.on("message", this.onMessage.bind(this));
 		ws.on("error", this.onError.bind(this));
-		this.logger.info(`WebSocketService.onConnection`, "core");
+		this.logger.info(`WebSocketService.onConnection`, "application");
 	}
 
 	onMessage(data: WebSocket.RawData) {
-		this.logger.info(`WebSocketService.onMessage: ${data}`, "core");
+		this.logger.info(`WebSocketService.onMessage: ${data}`, "application");
 	}
 
 	onError(error: Error) {
-		this.logger.info(`WebSocketService.onError: ${error}`, "core");
+		this.logger.info(`WebSocketService.onError: ${error}`, "application");
+	}
+
+	broadcast(message: any) {
+		this.webSocket?.clients.forEach((client) => {
+			if (client.readyState === WebSocket.OPEN) {
+				client.send(typeof message === 'string'
+					? message
+					: JSON.stringify(message)
+				);
+			}
+		});
+
+		this.logger.info(`WebSocketService.broadcast: ${message}`, "application");
 	}
 
 	async init(httpServer: HttpServer): Promise<void> {
