@@ -16,25 +16,21 @@ class MarketMonitorService {
 		this.exchangeService.tickerStream(async (markets: MarketProps[]) => {
 			if (!markets || !markets.length) return;
 
-			const promises = markets.map((market: MarketProps) =>
+			let results = await Promise.all(markets.map((market: MarketProps) => {
 				this.beholder.updateMemory({
 					index: "TICKER",
 					symbol: market.symbol,
 					value: market,
-				})
-			);
+				});
 
-			await Promise.all(promises);
-			this.logger.info(`Updated ${markets.length} tickers in memory`, "exchange");
+				this.logger.info(`Ticker updated ${market.symbol} ticker in memory`, "exchange");
+
+				this.websocketService.broadcast({ notification: market });
+			}));
 		});
 	}
 
 	async init(userId: string) {
-		// Testando conexão WebSocket
-		setInterval(() => {
-			this.websocketService.broadcast({ type: "ping" });
-		}, 3000);
-
 		this.startTickerMonitor();
 		this.logger.info(`Exchange Monitor initialized for user: ${userId}`, "core");
 	}

@@ -7,6 +7,7 @@ import helmet from "helmet";
 import * as http from "http";
 import morgan from "morgan";
 import router from "./router";
+import { getCorsOrigins } from "@utils/tools";
 
 dotenv.config();
 
@@ -30,7 +31,7 @@ export class HttpServer {
 		this.express.use(express.json());
 		this.express.use(
 			cors({
-				origin: process.env.CORS_ORIGIN,
+				origin: getCorsOrigins(process.env.CORS_ORIGINS || '')
 			})
 		);
 		this.express.use(

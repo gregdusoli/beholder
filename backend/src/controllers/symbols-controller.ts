@@ -1,7 +1,7 @@
 import SymbolsRepository from "@repositories/symbols-repository";
 import ExchangeService from "@services/exchange-service";
 
-class SymbolsController {
+export class SymbolsController {
 	private readonly useLeverageTokens = process.env.LEVERAGE_TOKENS === "true";
 
 	private readonly ignoredFiat = process.env.IGNORED_FIAT

@@ -2,7 +2,7 @@ import ExchangeService from "@services/exchange-service";
 import type { Request, Response } from "express";
 import Beholder from "../beholder";
 
-class ExchangeController {
+export class ExchangeController {
 	private readonly fiat = process.env.DEFAULT_FIAT ?? "USD";
 
 	constructor(

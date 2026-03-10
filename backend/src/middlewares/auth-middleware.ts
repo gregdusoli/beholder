@@ -1,4 +1,4 @@
-import AuthController from "@controllers/auth-controller";
+import authController, { AuthController } from "@controllers/auth-controller";
 import Logger from "@utils/logger";
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
@@ -11,14 +11,13 @@ const authMiddleware = async (
 	next: NextFunction
 ) => {
 	const token = req.headers["authorization"];
-	const authController = AuthController;
 
 	if (token) {
 		try {
 			const decoded = jwt.verify(token, process.env.JWT_SECRET!);
 
 			if (decoded) {
-				const isBlacklisted = authController.isBlacklisted(token);
+				const isBlacklisted = AuthController.isBlacklisted(token);
 
 				if (!isBlacklisted) {
 					res.locals.token = decoded;

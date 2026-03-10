@@ -3,10 +3,16 @@ import bcrypt from "bcryptjs";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-class AuthController {
-	private blacklist: any = {};
+export class AuthController {
+	private static blacklist: any = {};
 
-	constructor(private readonly usersRepository = new UsersRepository()) { }
+	constructor(
+		private readonly usersRepository = new UsersRepository()
+	) { }
+
+	static isBlacklisted(token: string) {
+		return !!AuthController.blacklist[token];
+	}
 
 	async doLogin(req: Request, res: Response) {
 		const { email, password } = req.body;
@@ -33,17 +39,13 @@ class AuthController {
 
 	async doLogout(req: Request, res: Response) {
 		const token: string = req.headers["authorization"]!;
-		this.blacklist[token] = true;
+		AuthController.blacklist[token] = true;
 
 		setTimeout(() => {
-			delete this?.blacklist[token];
+			delete AuthController?.blacklist[token];
 		}, Number(process.env.JWT_EXPIRES) * 1000);
 
 		res.status(200).send("Logged out successfully");
-	}
-
-	isBlacklisted(token: string) {
-		return !!this.blacklist[token];
 	}
 }
 

@@ -1,7 +1,7 @@
 import type { BeholderProps, ConversionProps } from "@interfaces/beholder";
 import { Cache } from "@utils/cache";
 import Logger from "@utils/logger";
-import { isEmpty } from "@utils/type-utils";
+import { isEmpty } from "@utils/tools";
 import { DOLLAR_COINS, FIAT_COINS } from "./config/constants";
 
 class Beholder extends Cache {
