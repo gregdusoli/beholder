@@ -72,7 +72,7 @@ class WebsocketServer {
 			}
 		});
 
-		this.logger.info(`WebSocketService.broadcast: ${message}`, "application");
+		this.logger.info(`WebSocketService.broadcast: ${JSON.stringify(message, null, 2)}`, "application");
 	}
 
 	async init(httpServer: HttpServer): Promise<void> {

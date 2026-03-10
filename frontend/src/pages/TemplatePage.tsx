@@ -1,5 +1,6 @@
 import Footer from "../components/Footer/Footer.tsx";
 import Sidebar from "../components/Menu/Sidebar.tsx";
+import Toast from "../components/Toast/Toast.tsx";
 
 function TemplatePage({ children }: { children?: React.ReactNode }) {
 	return (
@@ -9,6 +10,7 @@ function TemplatePage({ children }: { children?: React.ReactNode }) {
 				{children}
 				<Footer />
 			</main>
+			<Toast />
 		</>
 	);
 }

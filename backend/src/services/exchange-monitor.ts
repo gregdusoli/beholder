@@ -23,9 +23,8 @@ class MarketMonitorService {
 					value: market,
 				});
 
-				this.logger.info(`Ticker updated ${market.symbol} ticker in memory`, "exchange");
-
-				this.websocketService.broadcast({ notification: market });
+				const message = `Updated ticker ${market.symbol}`;
+				this.websocketService.broadcast({ notification: { type: "success", text: message } });
 			}));
 		});
 	}
