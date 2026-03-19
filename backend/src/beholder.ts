@@ -50,18 +50,18 @@ class Beholder extends Cache {
 
 		return props.index === "TICKER"
 			? this.updateTickerMemory({
-				symbol: payload.symbol,
-				index: payload.index,
-				value: payload.value,
-				canRunAutomations: payload.canRunAutomations,
-			})
+					symbol: payload.symbol,
+					index: payload.index,
+					value: payload.value,
+					canRunAutomations: payload.canRunAutomations,
+			  })
 			: this.setCache({
-				symbol: payload.symbol,
-				index: payload.index,
-				interval: payload.interval,
-				value: payload.value,
-				canRunAutomations: payload.canRunAutomations,
-			});
+					symbol: payload.symbol,
+					index: payload.index,
+					interval: payload.interval,
+					value: payload.value,
+					canRunAutomations: payload.canRunAutomations,
+			  });
 	}
 
 	async updateTickerMemory(props: BeholderProps) {
@@ -82,6 +82,15 @@ class Beholder extends Cache {
 		state.value.low = parseFloat(state.value.low);
 		state.value.volume = parseFloat(state.value.volume);
 		state.value.quoteVolume = parseFloat(state.value.quoteVolume);
+
+		delete state.value?.eventTime;
+		delete state.value?.eventType;
+		delete state.value?.firstTradeId;
+		delete state.value?.lastTradeId;
+		delete state.value?.numTrades;
+		delete state.value?.openTime;
+		delete state.value?.closeTime;
+		delete state.value?.symbol;
 
 		const currentMemory = await this.getMemory(state.symbol, state.index);
 

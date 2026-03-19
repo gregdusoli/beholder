@@ -12,9 +12,7 @@ class WebsocketServer {
 
 	private httpServer: HttpServer | undefined;
 
-	constructor(
-		private readonly logger = Logger.getInstance()
-	) {
+	constructor(private readonly logger = Logger.getInstance()) {
 		this.verifyClient = this.verifyClient.bind(this);
 	}
 
@@ -25,11 +23,13 @@ class WebsocketServer {
 		return WebsocketServer.instance;
 	}
 
-	private async verifyClient(info: any, callback: (res: boolean, code?: number) => void) {
+	private async verifyClient(
+		info: any,
+		callback: (res: boolean, code?: number) => void
+	) {
 		if (!validateCorsOrigin(info.origin)) return callback(false, 403);
 
-		const token = info.req?.url.split('token=')[1];
-
+		const token = info.req?.url.split("token=")[1];
 
 		if (token) {
 			try {
@@ -65,26 +65,28 @@ class WebsocketServer {
 	broadcast(message: any) {
 		this.webSocket?.clients.forEach((client) => {
 			if (client.readyState === WebSocket.OPEN) {
-				client.send(typeof message === 'string'
-					? message
-					: JSON.stringify(message)
+				client.send(
+					typeof message === "string" ? message : JSON.stringify(message)
 				);
 			}
 		});
 
-		this.logger.info(`WebSocketService.broadcast: ${JSON.stringify(message, null, 2)}`, "application");
+		this.logger.info(
+			`WebSocketService.broadcast: ${JSON.stringify(message, null, 2)}`,
+			"application"
+		);
 	}
 
 	async init(httpServer: HttpServer): Promise<void> {
 		this.httpServer = httpServer;
 
 		if (!this.httpServer) {
-			throw new Error('Server is required for WebSocket initialization');
+			throw new Error("Server is required for WebSocket initialization");
 		}
 
 		this.webSocket = new Websocket({
 			server: this.httpServer as any,
-			verifyClient: this.verifyClient
+			verifyClient: this.verifyClient,
 		});
 
 		this.webSocket.on("connection", this.onConnection.bind(this));
