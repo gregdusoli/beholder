@@ -21,8 +21,14 @@ export default class ExchangeService {
 
 	private validateCredentials() {
 		if (!this.exchangeApiKey || !this.exchangeApiSecret) {
-			throw new Error("Exchange API credentials are required. Please set EXCHANGE_API_KEY and EXCHANGE_API_SECRET environment variables.");
+			throw new Error(
+				"Exchange API credentials are required. Please set EXCHANGE_API_KEY and EXCHANGE_API_SECRET environment variables."
+			);
 		}
+	}
+
+	private setListenKey(key: string) {
+		Object.assign(this.exchange.options, { listenKey: key });
 	}
 
 	async exchangeInfo() {
@@ -48,6 +54,22 @@ export default class ExchangeService {
 				callback(type === "array" ? data : Object.values(data));
 			},
 			() => true
+		);
+	}
+
+	async userDataStream(balanceCallback: Function, orderCallback: Function) {
+		await this.exchange.websockets.userData(
+			() => {},
+			() => balanceCallback,
+			() => orderCallback,
+			(data: any) => {
+				this.setListenKey(data);
+				this.logger.info(
+					`userDataStream:subscribed:${JSON.stringify(data)}`,
+					"exchange"
+				);
+			},
+			() => {}
 		);
 	}
 }
